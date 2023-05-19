@@ -1,0 +1,12 @@
+{
+  "name": "server",
+  "dependencies": {
+    "@apollo/server": "^4.7.1",
+    "@graphql-tools/schema": "^10.0.0",
+    "graphql": "^16.6.0",
+    "graphql-redis-subscriptions": "^2.6.0",
+    "graphql-subscriptions": "^2.0.0",
+    "graphql-ws": "^5.13.1",
+    "ws": "^8.13.0"
+  }
+}
