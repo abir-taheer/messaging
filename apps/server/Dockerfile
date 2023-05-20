@@ -5,6 +5,8 @@ WORKDIR /usr/src/app
 COPY ./ /usr/src/app
 RUN yarn install --network-timeout 1000000
 RUN yarn build
+ARG BUILD_REDIS_URL
+ENV REDIS=$BUILD_REDIS_URL
 ENV PORT 80
 ENV NODE_ENV production
 EXPOSE 80
