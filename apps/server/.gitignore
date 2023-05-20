@@ -132,3 +132,4 @@ dist
 .idea/
 schema.graphql
 generated/
+graphql.schema.json

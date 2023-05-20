@@ -31,14 +31,17 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "tscpaths": "^0.0.9",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "@graphql-codegen/typescript-document-nodes": "3.0.4",
+    "@graphql-codegen/introspection": "3.0.1"
   },
   "scripts": {
     "watch:graphql": "npx chokidar \"src/graphql/type-defs/**/*.ts\" -c \"yarn run graphql-codegen\"",
-    "graphql-codegen": "npx graphql-codegen -r tsconfig-paths/register --config src/codegen.ts",
+    "graphql-codegen": "graphql-codegen -r tsconfig-paths/register --config src/codegen.ts",
     "watch:app": "nodemon --watch 'src/**/*' src/index.ts",
     "dev": "yarn watch:graphql & yarn watch:app",
     "build": "yarn graphql-codegen && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
-    "start": "node dist"
+    "start": "node dist",
+    "codegen": "graphql-codegen --config src/codegen.ts"
   }
 }
