@@ -1,17 +1,16 @@
-// import { createServer } from "http";
-// import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-// import { WebSocketServer } from "ws";
-// import { useServer } from "graphql-ws/lib/use/ws";
-import express from "express";
-import { ApolloServer } from "@apollo/server";
-import { resolvers, typeDefs } from "@/graphql";
+import { apolloServer, expressApp, httpServer } from "@/graphql/server";
+import bodyParser from "body-parser";
+import { expressMiddleware } from "@apollo/server/express4";
 
-export const app = express();
-// const httpServer = createServer(app);
+apolloServer.start().then(async () => {
+  expressApp.use(
+    "/graphql",
+    bodyParser.json(),
+    expressMiddleware(apolloServer)
+  );
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-// ...
-export const server = new ApolloServer({
-  schema,
+  const PORT = Number(process.env.PORT) || 4000;
+  httpServer.listen(PORT, () => {
+    console.log(`Server is now running on http://localhost:${PORT}/graphql`);
+  });
 });

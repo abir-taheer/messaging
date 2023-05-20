@@ -1,7 +1,7 @@
 import { graphql } from "@/utils/tags/graphql";
 
-export const query_typedef = graphql`
-  type Query {
+export const subscription_typedef = graphql`
+  type Subscription {
     greeting(name: String!): String!
   }
 `;
