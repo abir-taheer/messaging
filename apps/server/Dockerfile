@@ -16,4 +16,4 @@ RUN yarn build
 ENV PORT 80
 ENV NODE_ENV production
 EXPOSE 80
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "caprover-start" ]
