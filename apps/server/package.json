@@ -53,7 +53,7 @@
     "prisma:build": "npx prisma db push && npx prisma generate",
     "build": "yarn graphql-codegen && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "start": "node dist",
-    "caprover-start": "yarn prisma:build && yarn start",
+    "caprover": "yarn build && yarn start",
     "codegen": "graphql-codegen --config src/codegen.ts"
   }
 }

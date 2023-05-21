@@ -4,8 +4,8 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./ /usr/src/app
 
-ARG BUILD_REDIS_URL
-ARG BUILD_DATABASE_URL
+ARG REDIS_URL
+ARG DATABASE_URL
 ENV REDIS_URL=$BUILD_REDIS_URL
 ENV DATABASE_URL=$BUILD_DATABASE_URL
 
@@ -16,4 +16,4 @@ RUN yarn build
 ENV PORT 80
 ENV NODE_ENV production
 EXPOSE 80
-CMD [ "yarn", "caprover-start" ]
+CMD [ "yarn", "start" ]
