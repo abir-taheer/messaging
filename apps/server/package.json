@@ -50,7 +50,8 @@
     "graphql-codegen": "graphql-codegen -r tsconfig-paths/register --config src/codegen.ts",
     "watch:app": "nodemon -r tsconfig-paths/register --watch 'src/**/*' src/index.ts",
     "dev": "yarn watch:graphql & yarn watch:app",
-    "build": "yarn graphql-codegen && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "prisma:build": "npx prisma db push && npx prisma generate",
+    "build": "yarn prisma:build && yarn graphql-codegen && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "start": "node dist",
     "codegen": "graphql-codegen --config src/codegen.ts"
   }
