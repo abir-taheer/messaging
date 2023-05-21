@@ -10,13 +10,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model AppConfig {
+  /// The name of the field
+  field String @id @unique
+  /// JSON-encoded value of the field
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   /// The id of the user
-  id                 String            @id @default(uuid())
-  email              String            @unique
-  firstName          String
-  lastName           String
-  phoneNumber        String
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+
+  /// The phone number that belongs to the user
+  /// Stored in E.164 format
+  phoneNumber         String  @unique
+  phoneNumberVerified Boolean @default(false)
+
+  /// The email address that belongs to the user
+  /// Also the email address that's used to log in
+  email         String  @unique
+  emailVerified Boolean @default(false)
+
+  /// Bcrypted password hash
+  passwordHash String
+
   memberships        CommunityMember[]
   communitiesCreated Community[]
 }

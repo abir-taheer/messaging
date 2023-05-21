@@ -1,15 +1,12 @@
-import { apolloServer, expressApp, httpServer } from "@/graphql/server";
-import bodyParser from "body-parser";
-import { expressMiddleware } from "@apollo/server/express4";
+import { apolloServer } from "@/server/apollo";
+import { applyMiddlewareToExpressApp } from "@/server/express";
+import { httpServer } from "@/server/http";
 
 apolloServer.start().then(async () => {
-  expressApp.use(
-    "/graphql",
-    bodyParser.json(),
-    expressMiddleware(apolloServer)
-  );
+  await applyMiddlewareToExpressApp();
 
   const PORT = Number(process.env.PORT) || 4000;
+
   httpServer.listen(PORT, () => {
     console.log(`Server is now running on http://localhost:${PORT}/graphql`);
   });
