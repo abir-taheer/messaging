@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  /// The id of the user
+  id                 String            @id @default(uuid())
+  email              String            @unique
+  firstName          String
+  lastName           String
+  phoneNumber        String
+  memberships        CommunityMember[]
+  communitiesCreated Community[]
+}
+
+model Community {
+  /// An id for the community used internally anytime it's referenced
+  id String @id @default(uuid())
+
+  /// The community may be looked up by navigating to /community/{url}
+  url String @unique
+
+  /// The name of the community
+  name String
+
+  /// A short bio for the community
+  description String
+
+  /// The membership of the user that created this community
+  createdByUser   User   @relation(fields: [createdByUserId], references: [id])
+  createdByUserId String
+
+  /// The date that this community was created
+  createdAt DateTime @default(now())
+
+  /// The date that the most recent change to this community was made
+  updatedAt DateTime @updatedAt
+
+  /// The members of this community
+  members CommunityMember[]
+
+  /// The channels that belong to this community
+  channels Channel[]
+}
+
+/// A model that links a user to a community
+/// Any time that a user is referenced from inside of a community
+/// i.e. a message is made in a channel, or a user is invited to a channel
+/// the user is referenced through a community member
+/// We rarely if ever will reference a user directly
+/// This also gets rid of the need for composite indexes in some cases
+model CommunityMember {
+  /// Keep community member id separate from user id
+  /// This will make it so that membership ids from one channel cannot be used to lookup a user in another channel
+  id String @id @default(uuid())
+
+  /// Community that this membership belongs to
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  /// The user that this membership is linked to
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  /// The username for the user in this community
+  username String
+
+  /// The date that the user joined the community
+  joinedAt DateTime @default(now())
+
+  /// Whether or not this user is a super admin
+  isSuperAdmin Boolean @default(false)
+
+  channels           Channel[]
+  channelMemberships ChannelMembership[]
+  allMessages        Message[]
+}
+
+/// A channel represents where communication happens in a community
+/// Think of it like a chat room
+model Channel {
+  /// The id of the channel
+  id String @id @default(uuid())
+
+  /// The name of the channel
+  name String
+
+  /// The description of the channel
+  description String
+
+  /// The community that the channel belongs to
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  /// The membership of the user that created this channel
+  createdBy         CommunityMember @relation(fields: [createdByMemberId], references: [id])
+  createdByMemberId String
+
+  /// The date that this channel was created
+  createdAt DateTime @default(now())
+
+  /// The date that the most recent change to this channel was made
+  updatedAt DateTime @updatedAt
+
+  /// The members of this channel
+  memberships ChannelMembership[]
+
+  /// The messages sent in this channel
+  messages Message[]
+}
+
+/// This model joins a CommunityMember to a channel
+model ChannelMembership {
+  /// The channel that the membership belongs to
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  /// The community member that is a member of the channel
+  member   CommunityMember @relation(fields: [memberId], references: [id])
+  memberId String
+
+  /// The date that the user joined the channel
+  createdAt DateTime @default(now())
+
+  /// Whether or not this member is a super admin for the channel
+  isSuperAdmin Boolean @default(false)
+
+  @@id([channelId, memberId])
+}
+
+model Message {
+  id   BigInt @id
+  text String
+
+  /// The channel that this message belongs to
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  /// The user that created this message
+  createdBy         CommunityMember @relation(fields: [createdByMemberId], references: [id])
+  createdByMemberId String
+
+  /// The date that this message was created
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+
+  @@index([channelId, createdAt], type: BTree)
+}
