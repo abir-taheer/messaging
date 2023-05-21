@@ -8,7 +8,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { buildContext, ContextValue } from "@/graphql/context";
 import { getSessionMiddleware } from "@/server/session";
 import { Request, Response } from "express";
-import { ApolloServerPluginLandingPageProductionDefault } from "@apollo/server/plugin/landingPage/default";
+import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
@@ -39,11 +39,7 @@ export const apolloServer = new ApolloServer<ContextValue>({
   introspection: true,
   plugins: [
     ApolloServerPluginDrainHttpServer({ httpServer }),
-    ApolloServerPluginLandingPageProductionDefault({
-      embed: true,
-      graphRef: process.env.GRAPH_REF || "/graphql",
-    }),
-
+    ApolloServerPluginLandingPageLocalDefault({}),
     {
       async serverWillStart() {
         return {
