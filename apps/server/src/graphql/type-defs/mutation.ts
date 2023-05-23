@@ -4,7 +4,7 @@ export const mutation_typedef = graphql`
   type Mutation {
     sendMessage(message: String!): String!
 
-    loginWithPassword(email: String!, password: String!): User!
+    loginWithPassword(email: String!, password: String!): AuthResponse!
 
     signUpWithPassword(
       firstName: NonEmptyString!
@@ -12,7 +12,7 @@ export const mutation_typedef = graphql`
       phoneNumber: PhoneNumber!
       email: EmailAddress!
       password: NonEmptyString!
-    ): User!
+    ): AuthResponse!
 
     logout: Boolean!
   }

@@ -9,11 +9,12 @@ type SessionAuthValue =
     }
   | undefined;
 
-type RequestWithSession = Request & {
+export type RequestWithSession = Request & {
   session: Request["session"] & SessionAuthValue;
 };
 
 export type ContextValue = {
+  req: RequestWithSession;
   session: RequestWithSession["session"];
   user: User | null;
   isSignedIn: boolean;
@@ -40,7 +41,5 @@ export const buildContext = async (
 
   const isSignedIn = Boolean(user);
 
-  //@ts-ignore
-
-  return { session: req.session, user, isSignedIn };
+  return { req, session: req.session, user, isSignedIn };
 };

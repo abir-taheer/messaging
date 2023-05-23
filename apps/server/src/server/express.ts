@@ -16,7 +16,7 @@ export const applyMiddlewareToExpressApp = async () => {
   }
 
   expressApp.use(bodyParser.json());
-  expressApp.use(cors());
+  expressApp.use(cors({}));
   expressApp.use(requestIp.mw());
 
   const session = await getSessionMiddleware();

@@ -1,6 +1,11 @@
-import { MutationResolvers } from "@/generated/graphql";
+import {
+  AuthStatus,
+  MutationResolvers,
+  SuccessfulAuthResponse,
+} from "@/generated/graphql";
 import bcrypt from "bcrypt";
 import { prisma } from "@/database/prisma";
+import { ForbiddenError, UserInputError } from "apollo-server-errors";
 
 export const signUpWithPassword_resolver: MutationResolvers["signUpWithPassword"] =
   async (
@@ -9,8 +14,7 @@ export const signUpWithPassword_resolver: MutationResolvers["signUpWithPassword"
     { isSignedIn, session }
   ) => {
     if (isSignedIn) {
-      // TODO replace with a dedicated error class
-      throw new Error("You are already signed in");
+      throw new ForbiddenError("You are already signed in.");
     }
 
     // All the string validation is done by the scalars in graphql
@@ -23,8 +27,7 @@ export const signUpWithPassword_resolver: MutationResolvers["signUpWithPassword"
     });
 
     if (existingUser) {
-      // TODO replace with a dedicated error class
-      throw new Error(
+      throw new ForbiddenError(
         "An account with this email or phone number already exists"
       );
     }
@@ -39,7 +42,7 @@ export const signUpWithPassword_resolver: MutationResolvers["signUpWithPassword"
     const hasNumber = password.match(/[0-9]/);
 
     if (!hasLowerCase || !hasUpperCase || !hasNumber) {
-      throw new Error(
+      throw new UserInputError(
         "Password must contain at least one uppercase, one lowercase letter, and one number"
       );
     }
@@ -59,5 +62,10 @@ export const signUpWithPassword_resolver: MutationResolvers["signUpWithPassword"
     session.userId = user.id;
     await session.save();
 
-    return user;
+    const response: SuccessfulAuthResponse = {
+      status: AuthStatus.Success,
+      user,
+    };
+
+    return response;
   };

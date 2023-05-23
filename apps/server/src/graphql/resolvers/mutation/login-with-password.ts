@@ -1,11 +1,21 @@
-import { MutationResolvers } from "@/generated/graphql";
+import {
+  AuthStatus,
+  FailedAuthResponse,
+  MutationResolvers,
+  SuccessfulAuthResponse,
+} from "@/generated/graphql";
 import { passwordLoginStrategy } from "@/auth";
+import { ForbiddenError } from "apollo-server-errors";
+
+const InvalidCredentialsResponse: FailedAuthResponse = {
+  message: "Invalid email or password",
+  status: AuthStatus.Failure,
+};
 
 export const loginWithPassword_resolver: MutationResolvers["loginWithPassword"] =
-  async (_, { email, password }, { session, isSignedIn }) => {
+  async (_, { email, password }, { req, isSignedIn }) => {
     if (isSignedIn) {
-      // TODO update with a dedicated error class
-      throw new Error("You are already signed in");
+      throw new ForbiddenError("You are already signed in");
     }
 
     let user = null;
@@ -13,14 +23,17 @@ export const loginWithPassword_resolver: MutationResolvers["loginWithPassword"] 
     try {
       user = await passwordLoginStrategy({ email, password });
     } catch (e) {
-      // We can do some specific reporting or whatnot based on the error here in the future
-      // TODO update with a dedicated error class
-      throw new Error("Invalid email or password");
+      return InvalidCredentialsResponse;
     }
 
     // Update the session and save it
-    session.userId = user.id;
-    session.save();
+    req.session.userId = user.id;
+    req.session.save();
 
-    return user;
+    const response: SuccessfulAuthResponse = {
+      status: AuthStatus.Success,
+      user,
+    };
+
+    return response;
   };
