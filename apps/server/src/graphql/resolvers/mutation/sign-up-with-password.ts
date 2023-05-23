@@ -1,11 +1,11 @@
+import { prisma } from "@/database/prisma";
 import {
   AuthStatus,
   MutationResolvers,
   SuccessfulAuthResponse,
 } from "@/generated/graphql";
-import bcrypt from "bcrypt";
-import { prisma } from "@/database/prisma";
 import { ForbiddenError, UserInputError } from "apollo-server-errors";
+import bcrypt from "bcrypt";
 
 export const signUpWithPassword_resolver: MutationResolvers["signUpWithPassword"] =
   async (

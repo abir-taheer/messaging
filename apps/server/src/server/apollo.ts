@@ -1,17 +1,13 @@
-import { httpServer } from "@/server/http";
-import { ApolloServer } from "@apollo/server";
-import { makeExecutableSchema } from "@graphql-tools/schema";
 import { resolvers, typeDefs } from "@/graphql";
-import { webSocketServer } from "@/server/websocket";
-import { useServer } from "graphql-ws/lib/use/ws";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import {
-  buildContext,
-  ContextValue,
-  // RequestWithSession,
-} from "@/graphql/context";
+import { ContextValue, buildContext } from "@/graphql/context";
+import { httpServer } from "@/server/http";
 import { getSessionMiddleware } from "@/server/session";
+import { webSocketServer } from "@/server/websocket";
+import { ApolloServer } from "@apollo/server";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import { Request, Response } from "express";
+import { useServer } from "graphql-ws/lib/use/ws";
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 

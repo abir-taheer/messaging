@@ -1,10 +1,10 @@
+import { passwordLoginStrategy } from "@/auth";
 import {
   AuthStatus,
   FailedAuthResponse,
   MutationResolvers,
   SuccessfulAuthResponse,
 } from "@/generated/graphql";
-import { passwordLoginStrategy } from "@/auth";
 import { ForbiddenError } from "apollo-server-errors";
 
 const InvalidCredentialsResponse: FailedAuthResponse = {

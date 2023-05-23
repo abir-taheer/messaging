@@ -1,6 +1,6 @@
-import { Request } from "express";
-import { User } from "@prisma/client";
 import { prisma } from "@/database/prisma";
+import { User } from "@prisma/client";
+import { Request } from "express";
 
 type SessionAuthValue =
   | {

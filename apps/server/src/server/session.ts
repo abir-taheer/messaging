@@ -1,8 +1,8 @@
-import session from "express-session";
-import { randomBytes } from "crypto";
+import { prisma } from "@/database/prisma";
 import { getConfigValue } from "@/utils";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import { prisma } from "@/database/prisma";
+import { randomBytes } from "crypto";
+import session from "express-session";
 
 export const sessionStore = new PrismaSessionStore(prisma, {
   checkPeriod: 2 * 60 * 1000, //ms

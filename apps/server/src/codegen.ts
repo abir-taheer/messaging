@@ -1,8 +1,8 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { typeDefs } from "./graphql/type-defs";
-import { printSchema } from "graphql";
 import fs from "fs";
+import { printSchema } from "graphql";
+import { typeDefs } from "./graphql/type-defs";
 
 // First make a dump of the schema
 const schema = makeExecutableSchema({ typeDefs });
